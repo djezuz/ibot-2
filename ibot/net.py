@@ -2,8 +2,6 @@ import sys
 import json
 import requests
 
-from pprint import pprint as pp, pformat as pf
-
 
 class Network(object):
 
@@ -14,29 +12,40 @@ class Network(object):
         if data is None:
             self.data = Network.data
         self.game_url = '{0}/minefield/levels/{1}/games'.format(Network.root, level)
-        r = requests.post(self.game_url, self.data)
-        game = json.loads(r.text)
-        self.game_id = game['gameId']
-        self._parse_state(game['state'])
+        try:
+            r = requests.post(self.game_url, self.data)
+            game = json.loads(r.text)
+            self.game_id = game['gameId']
+            self._parse_state(game['state'])
+        except requests.exceptions.ConnectionError:
+            self.game_id = None
 
     def _parse_state(self, state):
-        self.loc    = state['player']
-        self.mines  = state['mines']
+        self.loc = state['player']
+        self.mines = state['mines']
         self.target = state['target']
-        self.mode   = state['mode']
-        self.max_x  = state['size']['w']
-        self.max_y  = state['size']['h']
+        self.mode = state['mode']
+        self.max_x = state['size']['w']
+        self.max_y = state['size']['h']
 
     def move(self, direction):
         url = '{0}/minefield/{1}/moves'.format(Network.root, self.game_id)
-        r = requests.post(url, data={'action': direction})
-        r = json.loads(r.text)
-        self._parse_state(r)
+        try:
+            r = requests.post(url, data={'action': direction})
+            r = json.loads(r.text)
+            self._parse_state(r)
+        except requests.exceptions.ConnectionError:
+            pass
 
     @property
     def map(self):
-        r = requests.get('{0}/games/{1}/state.txt'.format(Network.root, self.game_id))
-        return r.text
+        try:
+            r = requests.get('{0}/games/{1}/state.txt'.format(Network.root, self.game_id))
+            m = r.text
+        except requests.exceptions.ConnectionError:
+            pass
+            m = 'There is a problem with the server'
+        return m
 
     @property
     def x(self):
@@ -46,13 +55,11 @@ class Network(object):
     def y(self):
         return self.loc['y']
 
-
     def __str__(self):
         return self.map
 
-
 usage = """\
-net.py <level>
+ibot <level>
     where level is one of the following:
         tiny - all the demos solve this for you, move once to win (hint, go down)
         empty - a large map with no mines
@@ -65,7 +72,6 @@ net.py <level>
         puppyGuard - a few mines patrol the way to your goal, can you get past?
         armyAnts - the ultimate challenge, tons of mines move randomly without regard to your position
 """
-
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

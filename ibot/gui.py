@@ -64,10 +64,13 @@ class GUI():
                 break
             self.draw()
 
-if __name__ == "__main__":
+
+def main():
     if len(sys.argv) != 2:
         print usage
         sys.exit(1)
     puzzle = sys.argv[1]
     with GUI(puzzle) as g:
         g.run()
+if __name__ == "__main__":
+    main()
