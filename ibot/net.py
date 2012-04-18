@@ -32,7 +32,6 @@ class Network(object):
         r = requests.post(url, data={'action': direction})
         r = json.loads(r.text)
         self._parse_state(r)
-        # 200 {"mode":"won","size":{"w":2,"h":2},"player":{"x":0,"y":1},"target":{"x":0,"y":1},"mines":[]}
 
     @property
     def map(self):
@@ -53,8 +52,20 @@ class Network(object):
 
 
 usage = """\
-net.py <tiny|empty|easy>
+net.py <level>
+    where level is one of the following:
+        tiny - all the demos solve this for you, move once to win (hint, go down)
+        empty - a large map with no mines
+        easy - a few stationary mines always in the same place
+        muchosMines - lots of mines with deadly traps
+        randomMines - a random assortment of mines to avoid
+        movingTarget - Your goal keeps shifting, can you hit it?
+        blackAnts - the mines grow legs and move each time you do (they can't move onto your square)
+        heatSeeking - a single mine heads straight for you, watch out!
+        puppyGuard - a few mines patrol the way to your goal, can you get past?
+        armyAnts - the ultimate challenge, tons of mines move randomly without regard to your position
 """
+
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
