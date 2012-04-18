@@ -2,6 +2,21 @@ import sys
 import json
 import requests
 
+usage = """\
+ibot <level>
+    where level is one of the following:
+        tiny - all the demos solve this for you, move once to win (hint, go down)
+        empty - a large map with no mines
+        easy - a few stationary mines always in the same place
+        muchosMines - lots of mines with deadly traps
+        randomMines - a random assortment of mines to avoid
+        movingTarget - Your goal keeps shifting, can you hit it?
+        blackAnts - the mines grow legs and move each time you do (they can't move onto your square)
+        heatSeeking - a single mine heads straight for you, watch out!
+        puppyGuard - a few mines patrol the way to your goal, can you get past?
+        armyAnts - the ultimate challenge, tons of mines move randomly without regard to your position
+"""
+
 
 class Network(object):
 
@@ -46,32 +61,6 @@ class Network(object):
             pass
             m = 'There is a problem with the server'
         return m
-
-    @property
-    def x(self):
-        return self.loc['x']
-
-    @property
-    def y(self):
-        return self.loc['y']
-
-    def __str__(self):
-        return self.map
-
-usage = """\
-ibot <level>
-    where level is one of the following:
-        tiny - all the demos solve this for you, move once to win (hint, go down)
-        empty - a large map with no mines
-        easy - a few stationary mines always in the same place
-        muchosMines - lots of mines with deadly traps
-        randomMines - a random assortment of mines to avoid
-        movingTarget - Your goal keeps shifting, can you hit it?
-        blackAnts - the mines grow legs and move each time you do (they can't move onto your square)
-        heatSeeking - a single mine heads straight for you, watch out!
-        puppyGuard - a few mines patrol the way to your goal, can you get past?
-        armyAnts - the ultimate challenge, tons of mines move randomly without regard to your position
-"""
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
