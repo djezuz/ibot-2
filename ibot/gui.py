@@ -2,7 +2,6 @@
 
 import curses
 
-
 class guy():
     def __init__(self, y, x):
         self.wt = 3
